@@ -12,10 +12,11 @@ import java.util.Random;
  *
  * @author Mike
  */
-public class BasicEnemy {
+public class BasicEnemy implements Entity{
     
     private double x;
     private double y;
+    private double velY;
     Random r = new Random();
     
     private Textures tex;
@@ -24,13 +25,14 @@ public class BasicEnemy {
         this.x = x;
         this.y = y;
         this.tex = tex;
+        velY = r.nextInt(3) + 1;
     }
     
     public void tick(){
-        y += 2;
+        y += velY;
         
         if(y >= Game.HEIGHT * Game.SCALE){
-            setY(0);
+            y = -10;
             setX(r.nextInt((Game.WIDTH * Game.SCALE)));
         }
     }

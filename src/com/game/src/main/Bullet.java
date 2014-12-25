@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
  *
  * @author Mike
  */
-public class Bullet {
+public class Bullet implements Entity {
     private double x;
     private double y;
     
@@ -34,6 +34,10 @@ public class Bullet {
     
     public double getY(){
         return y;
+    }
+    
+    public double getX(){
+        return x;
     }
 }
 

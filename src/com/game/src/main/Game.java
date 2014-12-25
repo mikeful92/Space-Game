@@ -37,8 +37,11 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage spriteSheet = null;
     private BufferedImage background = null;
     
-    private boolean is_Shooting;
+    private boolean is_Shooting = false;
     
+    private int enemy_count = 5;
+    private int enemy_killed = 0;
+   
     private Player p;
     private Controller c;
     private Textures tex;
@@ -54,13 +57,13 @@ public class Game extends Canvas implements Runnable {
         }catch(IOException e){
             e.printStackTrace();
         }
+        tex = new Textures(this);
+        p = new Player((Game.WIDTH * Game.SCALE)/2, (Game.HEIGHT * Game.SCALE)- 100, tex);
+        c = new Controller(tex);
         
         addKeyListener(new KeyInput(this));
         
-        tex = new Textures(this);
-        
-        p = new Player((Game.WIDTH * Game.SCALE)/2, (Game.HEIGHT * Game.SCALE)- 100, tex);
-        c = new Controller(this, tex);
+        c.createBasicEnemy(enemy_count);
         
         keyDown[0] = false;
         keyDown[1] = false;
@@ -85,7 +88,7 @@ public class Game extends Canvas implements Runnable {
             keyDown[3] = true; 
         }else if(key == KeyEvent.VK_SPACE && !is_Shooting){
             is_Shooting = true;
-            c.addBullet(new Bullet(p.getX(), p.getY(), tex));
+            c.addEntity(new Bullet(p.getX(), p.getY(), tex));
         }
     }
     
@@ -110,6 +113,7 @@ public class Game extends Canvas implements Runnable {
         if(!keyDown[2] && !keyDown[3]) p.setVelY(0);
     }
     
+    //Initiates game, sets frame (Dimension and properties) and starts game
     public static void main(String args[]){
         Game game = new Game();
         
@@ -213,4 +217,34 @@ public class Game extends Canvas implements Runnable {
     public BufferedImage getSpriteSheet(){
         return spriteSheet;
     }
+
+    /**
+     * @return the enemy_count
+     */
+    public int getEnemy_count() {
+        return enemy_count;
+    }
+
+    /**
+     * @param enemy_count the enemy_count to set
+     */
+    public void setEnemy_count(int enemy_count) {
+        this.enemy_count = enemy_count;
+    }
+
+    /**
+     * @return the enemy_killed
+     */
+    public int getEnemy_killed() {
+        return enemy_killed;
+    }
+
+    /**
+     * @param enemy_killed the enemy_killed to set
+     */
+    public void setEnemy_killed(int enemy_killed) {
+        this.enemy_killed = enemy_killed;
+    }
+    
+    
 }
