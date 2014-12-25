@@ -6,6 +6,7 @@
 package com.game.src.main;
 
 import java.awt.Graphics;
+import java.util.Random;
 
 /**
  *
@@ -15,6 +16,8 @@ public class BasicEnemy {
     
     private double x;
     private double y;
+    Random r = new Random();
+    
     private Textures tex;
     
     public BasicEnemy(double x, double y, Textures tex){
@@ -25,6 +28,11 @@ public class BasicEnemy {
     
     public void tick(){
         y += 2;
+        
+        if(y >= Game.HEIGHT * Game.SCALE){
+            setY(0);
+            setX(r.nextInt((Game.WIDTH * Game.SCALE)));
+        }
     }
     
     public void render(Graphics g){
@@ -33,5 +41,17 @@ public class BasicEnemy {
     
     public double getY(){
         return y;
+    }
+    
+    public double getX(){
+        return x;
+    }
+    
+    public void setY(double y){
+        this.y = y;
+    }
+    
+    public void setX(double x){
+        this.x = x;
     }
 }

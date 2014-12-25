@@ -7,6 +7,7 @@ package com.game.src.main;
 
 import java.awt.Graphics;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  *
@@ -15,6 +16,8 @@ import java.util.LinkedList;
 public class Controller {
     private LinkedList<Bullet> b = new LinkedList<Bullet>();
     private LinkedList<BasicEnemy> e = new LinkedList<BasicEnemy>();
+    
+    Random r = new Random();
     
     Bullet tempBullet;
     BasicEnemy tempBasicEnemy;
@@ -26,9 +29,8 @@ public class Controller {
         this.game = game;
         this.tex = tex;
         
-        for(int x = 24; x < Game.WIDTH * Game.SCALE; x += 64){
-            addBasicEnemy(new BasicEnemy(x, 0, tex));
-        }
+        addBasicEnemy(new BasicEnemy(r.nextInt(Game.WIDTH * Game. SCALE), 0, tex));
+
     }
     
     public void tick(){
@@ -44,11 +46,7 @@ public class Controller {
         
         for(int i = 0; i < e.size(); i++){
             tempBasicEnemy = e.get(i);
-            
-            if(tempBasicEnemy.getY() > Game.HEIGHT * Game.SCALE){
-                removeBasicEnemy(tempBasicEnemy);
-                
-            }
+                    
             
             tempBasicEnemy.tick();
         }
