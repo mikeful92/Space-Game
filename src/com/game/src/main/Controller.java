@@ -14,14 +14,21 @@ import java.util.LinkedList;
  */
 public class Controller {
     private LinkedList<Bullet> b = new LinkedList<Bullet>();
+    private LinkedList<BasicEnemy> e = new LinkedList<BasicEnemy>();
     
     Bullet tempBullet;
+    BasicEnemy tempBasicEnemy;
     
     Game game;
+    Textures tex;
     
-    public Controller(Game game){
+    public Controller(Game game, Textures tex){
         this.game = game;
+        this.tex = tex;
         
+        for(int x = 24; x < Game.WIDTH * Game.SCALE; x += 64){
+            addBasicEnemy(new BasicEnemy(x, 0, tex));
+        }
     }
     
     public void tick(){
@@ -34,6 +41,17 @@ public class Controller {
             
             tempBullet.tick();
         }
+        
+        for(int i = 0; i < e.size(); i++){
+            tempBasicEnemy = e.get(i);
+            
+            if(tempBasicEnemy.getY() > Game.HEIGHT * Game.SCALE){
+                removeBasicEnemy(tempBasicEnemy);
+                
+            }
+            
+            tempBasicEnemy.tick();
+        }
     }
     
     public void render(Graphics g){
@@ -41,7 +59,12 @@ public class Controller {
             tempBullet = b.get(i);
             
             tempBullet.render(g);
-        }        
+        }
+        for(int i = 0; i < e.size(); i++){
+            tempBasicEnemy = e.get(i);
+            
+            tempBasicEnemy.render(g);
+        }
     }
     
     public void addBullet (Bullet block){
@@ -51,5 +74,15 @@ public class Controller {
     
     public void removeBullet (Bullet block){
         b.remove(block);
+    }
+    
+        
+    public void addBasicEnemy (BasicEnemy block){
+        e.add(block);
+        
+    }
+    
+    public void removeBasicEnemy (BasicEnemy block){
+        e.remove(block);
     }
 }

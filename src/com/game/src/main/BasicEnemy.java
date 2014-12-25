@@ -6,34 +6,32 @@
 package com.game.src.main;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Mike
  */
-public class Bullet {
+public class BasicEnemy {
+    
     private double x;
     private double y;
-    
     private Textures tex;
     
-    public Bullet(double x, double y, Textures tex){
+    public BasicEnemy(double x, double y, Textures tex){
         this.x = x;
         this.y = y;
         this.tex = tex;
     }
     
     public void tick(){
-        y -= 7;
+        y += 2;
     }
     
     public void render(Graphics g){
-        g.drawImage(tex.bullet, (int) x, (int)y, null);
+        g.drawImage(tex.basicEnemy, (int) x, (int) y, null);
     }
     
     public double getY(){
         return y;
     }
 }
-

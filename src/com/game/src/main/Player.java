@@ -22,13 +22,13 @@ public class Player {
     
     private BufferedImage player;
     
-    public Player(double x, double y, Game game){
+    private Textures tex;
+    
+    public Player(double x, double y, Textures tex){
         this.x = x;
         this.y = y;
+        this.tex = tex;
         
-        SpriteSheet ss = new SpriteSheet(game.getSpriteSheet());
-        
-        player = ss.grabImage(1, 1, 32, 32);
     }
     
     public void tick(){
@@ -37,16 +37,16 @@ public class Player {
         
         if(x <= 0)
             x = 0;
-        if(x >= 640-18)
-            x = 640-18;
+        if(x >= (Game.WIDTH * Game.SCALE) -18)
+            x = (Game.WIDTH * Game.SCALE)- 18;
         if(y <= 0)
             y = 0;
-        if(y >= 480-32)
-            y = 480-32;
+        if(y >= (Game.HEIGHT* Game.SCALE)-24)
+            y = (Game.HEIGHT* Game.SCALE)-24;
     }
     
     public void render(Graphics g){
-        g.drawImage(player, (int) x, (int) y, null);
+        g.drawImage(tex.player, (int) x, (int) y, null);
         
     }
     

@@ -41,6 +41,7 @@ public class Game extends Canvas implements Runnable {
     
     private Player p;
     private Controller c;
+    private Textures tex;
     
     private boolean[] keyDown = new boolean[4];
     
@@ -56,8 +57,10 @@ public class Game extends Canvas implements Runnable {
         
         addKeyListener(new KeyInput(this));
         
-        p = new Player(200, 200, this);
-        c = new Controller(this);
+        tex = new Textures(this);
+        
+        p = new Player((Game.WIDTH * Game.SCALE)/2, (Game.HEIGHT * Game.SCALE)- 100, tex);
+        c = new Controller(this, tex);
         
         keyDown[0] = false;
         keyDown[1] = false;
@@ -82,7 +85,7 @@ public class Game extends Canvas implements Runnable {
             keyDown[3] = true; 
         }else if(key == KeyEvent.VK_SPACE && !is_Shooting){
             is_Shooting = true;
-            c.addBullet(new Bullet(p.getX(), p.getY(), this));
+            c.addBullet(new Bullet(p.getX(), p.getY(), tex));
         }
     }
     
@@ -195,7 +198,7 @@ public class Game extends Canvas implements Runnable {
         
         Graphics g = bs.getDrawGraphics();
         //Render Start
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        //g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
         g.drawImage(background, 0, 0, null);
         
         c.render(g);
