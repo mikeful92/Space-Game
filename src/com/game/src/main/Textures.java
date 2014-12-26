@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
  */
 public class Textures {
     
-    public BufferedImage[] player = new BufferedImage[1];
+    public BufferedImage[] player = new BufferedImage[3];
     public BufferedImage[] bullet = new BufferedImage[1];
     public BufferedImage[] basicEnemy = new BufferedImage[1];
     
@@ -27,6 +27,9 @@ public class Textures {
     
     private void getTextures(){
         player[0] = ss.grabImage(1, 1, 32, 32);
+        player[1] = ss.grabImage(1, 2, 32, 32);
+        player[2] = ss.grabImage(1, 3, 32, 32);
+        
         bullet[0] = ss.grabImage(2, 1, 8, 13);
         basicEnemy[0] = ss.grabImage(3, 1, 22, 24);
     }

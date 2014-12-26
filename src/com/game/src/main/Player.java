@@ -29,7 +29,7 @@ public class Player extends GameObject implements EntityA{
         super(x,y);
         this.tex = tex;
         
-        anim = new Animation(5, tex.player[0], tex.player[0], tex.player[0]);
+        anim = new Animation(5, tex.player[0], tex.player[1], tex.player[2], tex.player[1]);
     }
     
     public void tick(){
