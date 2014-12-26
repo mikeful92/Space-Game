@@ -13,7 +13,9 @@ import java.awt.image.BufferedImage;
  */
 public class Textures {
     
-    public BufferedImage player, bullet, basicEnemy;
+    public BufferedImage[] player = new BufferedImage[1];
+    public BufferedImage[] bullet = new BufferedImage[1];
+    public BufferedImage[] basicEnemy = new BufferedImage[1];
     
     private SpriteSheet ss;
     
@@ -24,8 +26,8 @@ public class Textures {
     }
     
     private void getTextures(){
-        player = ss.grabImage(1, 1, 32, 32);
-        bullet = ss.grabImage(2, 1, 32, 32);
-        basicEnemy = ss.grabImage(3, 1, 32, 32);
+        player[0] = ss.grabImage(1, 1, 32, 32);
+        bullet[0] = ss.grabImage(2, 1, 8, 13);
+        basicEnemy[0] = ss.grabImage(3, 1, 22, 24);
     }
 }

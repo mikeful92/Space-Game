@@ -5,6 +5,8 @@
  */
 package com.game.src.main;
 
+import com.game.src.main.classes.EntityA;
+import com.game.src.main.classes.EntityB;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,6 +15,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -46,6 +49,9 @@ public class Game extends Canvas implements Runnable {
     private Controller c;
     private Textures tex;
     
+    public LinkedList<EntityA> ea;
+    public LinkedList<EntityB> eb;
+    
     private boolean[] keyDown = new boolean[4];
     
     public void init(){
@@ -60,6 +66,9 @@ public class Game extends Canvas implements Runnable {
         tex = new Textures(this);
         p = new Player((Game.WIDTH * Game.SCALE)/2, (Game.HEIGHT * Game.SCALE)- 100, tex);
         c = new Controller(tex);
+        
+        ea = c.getEntityA();
+        eb = c.getEntityB();
         
         addKeyListener(new KeyInput(this));
         
@@ -88,7 +97,7 @@ public class Game extends Canvas implements Runnable {
             keyDown[3] = true; 
         }else if(key == KeyEvent.VK_SPACE && !is_Shooting){
             is_Shooting = true;
-            c.addEntity(new Bullet(p.getX(), p.getY(), tex));
+            c.addEntity(new Bullet(p.getX() + 12, p.getY(), tex, this));
         }
     }
     

@@ -5,27 +5,31 @@
  */
 package com.game.src.main;
 
+import com.game.src.main.classes.EntityB;
+import com.game.src.main.libs.Animation;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.Random;
 
 /**
  *
  * @author Mike
  */
-public class BasicEnemy implements Entity{
+public class BasicEnemy extends GameObject implements EntityB{
     
-    private double x;
-    private double y;
     private double velY;
     Random r = new Random();
     
     private Textures tex;
     
+    private Animation anim;
+    
     public BasicEnemy(double x, double y, Textures tex){
-        this.x = x;
-        this.y = y;
+        super(x,y);
         this.tex = tex;
-        velY = r.nextInt(3) + 1;
+        velY = 1;
+        
+        anim = new Animation(5, tex.basicEnemy[0], tex.basicEnemy[0], tex.basicEnemy[0]);
     }
     
     public void tick(){
@@ -33,12 +37,14 @@ public class BasicEnemy implements Entity{
         
         if(y >= Game.HEIGHT * Game.SCALE){
             y = -10;
-            setX(r.nextInt((Game.WIDTH * Game.SCALE)));
+            x = (r.nextInt((Game.WIDTH * Game.SCALE)));
         }
+        anim.runAnimation();
     }
     
     public void render(Graphics g){
-        g.drawImage(tex.basicEnemy, (int) x, (int) y, null);
+        //g.drawImage(tex.basicEnemy[0], (int) x, (int) y, null);
+        anim.drawAnimation(g, x, y, 0);
     }
     
     public double getY(){
@@ -55,5 +61,9 @@ public class BasicEnemy implements Entity{
     
     public void setX(double x){
         this.x = x;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, 22, 24);
     }
 }

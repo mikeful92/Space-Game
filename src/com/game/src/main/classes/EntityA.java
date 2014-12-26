@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.game.src.main;
+package com.game.src.main.classes;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 /**
  *
  * @author Mike
  */
-public interface Entity {
+public interface EntityA {
     
     public void tick();
     public void render(Graphics g);
+    public Rectangle getBounds();
     
     public double getX();
     public double getY();

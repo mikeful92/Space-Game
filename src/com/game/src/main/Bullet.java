@@ -5,31 +5,43 @@
  */
 package com.game.src.main;
 
+import com.game.src.main.classes.EntityA;
+import com.game.src.main.libs.Animation;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Mike
  */
-public class Bullet implements Entity {
-    private double x;
-    private double y;
+public class Bullet extends GameObject implements EntityA {
     
     private Textures tex;
+    private Game game;
     
-    public Bullet(double x, double y, Textures tex){
-        this.x = x;
-        this.y = y;
+    Animation anim;
+    
+    public Bullet(double x, double y, Textures tex, Game game){
+        super(x,y);
         this.tex = tex;
+        this.game = game;
+        
+        anim = new Animation(5, tex.bullet[0], tex.bullet[0],tex.bullet[0]);
     }
     
     public void tick(){
         y -= 7;
+        
+        if(Physics.Collision(this, game.eb)){
+            System.out.println("COLLISION DETECTED");
+        }
+        anim.runAnimation();
     }
     
     public void render(Graphics g){
-        g.drawImage(tex.bullet, (int) x, (int)y, null);
+        //g.drawImage(tex.bullet[0], (int) x, (int)y, null);
+        anim.drawAnimation(g, x, y, 0);
     }
     
     public double getY(){
@@ -38,6 +50,11 @@ public class Bullet implements Entity {
     
     public double getX(){
         return x;
+    }
+
+
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, 8, 13);
     }
 }
 

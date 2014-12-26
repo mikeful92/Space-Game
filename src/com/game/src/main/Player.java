@@ -5,30 +5,31 @@
  */
 package com.game.src.main;
 
+import com.game.src.main.classes.EntityA;
+import com.game.src.main.libs.Animation;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Mike
  */
-public class Player {
+public class Player extends GameObject implements EntityA{
     
-    private double x;
-    private double y;
-    
+   
     private double velX = 0;
     private double velY = 0;
-    
-    private BufferedImage player;
-    
     private Textures tex;
+    private Game game;
+    
+    Animation anim;
     
     public Player(double x, double y, Textures tex){
-        this.x = x;
-        this.y = y;
+        super(x,y);
         this.tex = tex;
         
+        anim = new Animation(5, tex.player[0], tex.player[0], tex.player[0]);
     }
     
     public void tick(){
@@ -43,10 +44,18 @@ public class Player {
             y = 0;
         if(y >= (Game.HEIGHT* Game.SCALE)-24)
             y = (Game.HEIGHT* Game.SCALE)-24;
+        
+        anim.runAnimation();
+               
     }
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, 32, 32);
+    }    
+
     
     public void render(Graphics g){
-        g.drawImage(tex.player, (int) x, (int) y, null);
+        //g.drawImage(tex.player[0], (int) x, (int) y, null);
+        anim.drawAnimation(g, x, y, 0);
         
     }
     
@@ -73,4 +82,6 @@ public class Player {
     public void setVelY(double velY){
         this.velY = velY;
     }
+
+    
 }
