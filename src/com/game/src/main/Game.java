@@ -8,6 +8,7 @@ package com.game.src.main;
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -31,12 +32,13 @@ public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 320;
     public static final int HEIGHT = WIDTH /12*9;
     public static final int SCALE = 2;
+
     public final String TITLE = "2D Space Game";
     
     private boolean running = false;
     private Thread thread;
     
-    private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage image = new BufferedImage(WIDTH * SCALE, HEIGHT * SCALE, BufferedImage.TYPE_INT_RGB);
     private BufferedImage spriteSheet = null;
     private BufferedImage background = null;
     
@@ -48,9 +50,16 @@ public class Game extends Canvas implements Runnable {
     private Player p;
     private Controller c;
     private Textures tex;
+    private Menu menu;
+    private Restart restart;
     
     public LinkedList<EntityA> ea;
     public LinkedList<EntityB> eb;
+    
+    public static int Health = 100;
+    
+    private static State state = State.Menu;
+    
     
     private boolean[] keyDown = new boolean[4];
     
@@ -64,13 +73,16 @@ public class Game extends Canvas implements Runnable {
             e.printStackTrace();
         }
         tex = new Textures(this);
-        p = new Player((Game.WIDTH * Game.SCALE)/2, (Game.HEIGHT * Game.SCALE)- 100, tex);
-        c = new Controller(tex);
+        c = new Controller(tex, this);
+        p = new Player((WIDTH * SCALE)/2, (HEIGHT * SCALE)- 100, tex, this,c);
+        menu = new Menu();
+        restart = new Restart();
         
         ea = c.getEntityA();
         eb = c.getEntityB();
         
-        addKeyListener(new KeyInput(this));
+        this.addKeyListener(new KeyInput(this));
+        this.addMouseListener(new MouseInput(this, getState()));
         
         c.createBasicEnemy(enemy_count);
         
@@ -83,34 +95,37 @@ public class Game extends Canvas implements Runnable {
     public void keyPressed(KeyEvent e){
         int key = e.getKeyCode();
         
-        if(key == KeyEvent.VK_RIGHT){
-            p.setVelX(5);
-            keyDown[0] = true; 
-        }else if(key == KeyEvent.VK_LEFT){
-            p.setVelX(-5);
-            keyDown[1] = true; 
-        }else if(key == KeyEvent.VK_DOWN){
-            p.setVelY(5);
-            keyDown[2] = true; 
-        }else if(key == KeyEvent.VK_UP){
-            p.setVelY(-5);
-            keyDown[3] = true; 
-        }else if(key == KeyEvent.VK_SPACE && !is_Shooting){
-            is_Shooting = true;
-            c.addEntity(new Bullet(p.getX() + 12, p.getY(), tex, this));
+        if(getState() == State.Game){
+            if(key == KeyEvent.VK_D){
+                p.setVelX(6);
+                keyDown[0] = true; 
+            }else if(key == KeyEvent.VK_A){
+                p.setVelX(-6);
+                keyDown[1] = true; 
+            }else if(key == KeyEvent.VK_S){
+                p.setVelY(6);
+                keyDown[2] = true; 
+            }else if(key == KeyEvent.VK_W){
+                p.setVelY(-6);
+                keyDown[3] = true; 
+            }else if(key == KeyEvent.VK_SPACE && !is_Shooting){
+                is_Shooting = true;
+                c.addEntity(new Bullet(p.getX() + 12, p.getY() + 10, tex, this, c));
+            }
         }
+        
     }
     
     public void keyReleased(KeyEvent e){
         int key = e.getKeyCode();
         
-        if(key == KeyEvent.VK_RIGHT){
+        if(key == KeyEvent.VK_D){
             keyDown[0] = false; 
-        }else if(key == KeyEvent.VK_LEFT){
+        }else if(key == KeyEvent.VK_A){
             keyDown[1] = false; 
-        }else if(key == KeyEvent.VK_DOWN){
+        }else if(key == KeyEvent.VK_S){
             keyDown[2] = false; 
-        }else if(key == KeyEvent.VK_UP){
+        }else if(key == KeyEvent.VK_W){
             keyDown[3] = false; 
         }else if(key == KeyEvent.VK_SPACE){
             is_Shooting = false;
@@ -197,8 +212,28 @@ public class Game extends Canvas implements Runnable {
      }
 
     private void tick() {
-        p.tick();
-        c.tick();
+        if(getState() == State.Game){
+            p.tick();
+            c.tick();
+                    
+            if(enemy_killed >= enemy_count){
+                enemy_count += 2;
+                enemy_killed = 0;
+                c.createBasicEnemy(enemy_count);
+            }
+
+            if( Health <= 0){
+                setState(State.Restart);
+            }
+        }else if(getState() == State.Restart){
+            Health = 100;
+            setEnemy_killed(0);
+            setEnemy_count(5);
+            p.setX((WIDTH * SCALE)/2);
+            p.setY((HEIGHT * SCALE)- 100);
+                        
+        }
+        
     }
     private void render(){
         
@@ -214,10 +249,22 @@ public class Game extends Canvas implements Runnable {
         //g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
         g.drawImage(background, 0, 0, null);
         
-        c.render(g);
-        p.render(g);
-        
-        
+        if(getState() == State.Game){
+            c.render(g);
+            p.render(g);
+            
+            g.setColor(Color.gray);
+            g.fillRect(5,5,100,20);
+            g.setColor(Color.green);
+            g.fillRect(5,5,Health,20);
+            g.setColor(Color.white);
+            g.drawRect(5,5,100,20);
+        }else if(getState() == State.Menu){
+            menu.render(g);
+        }else if(getState() == State.Restart){
+            restart.render(g);
+        }
+                        
         // Render End
         g.dispose();
         bs.show();
@@ -255,5 +302,21 @@ public class Game extends Canvas implements Runnable {
         this.enemy_killed = enemy_killed;
     }
     
+     /**
+     * @return the state
+     */
+    public static State getState() {
+        return state;
+    }
+    /**
+     * @param aState the state to set
+     */
+    public static void setState(State aState) {
+        state = aState;
+    }
     
+    public static void reinit(){
+        Health = 100;
+       
+    }
 }

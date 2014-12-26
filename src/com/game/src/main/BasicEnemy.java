@@ -5,6 +5,7 @@
  */
 package com.game.src.main;
 
+import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
 import com.game.src.main.libs.Animation;
 import java.awt.Graphics;
@@ -17,17 +18,22 @@ import java.util.Random;
  */
 public class BasicEnemy extends GameObject implements EntityB{
     
+    private Textures tex;
     private double velY;
     Random r = new Random();
+    private Game game;
+    private Controller c;
     
-    private Textures tex;
     
-    private Animation anim;
+    Animation anim;
     
-    public BasicEnemy(double x, double y, Textures tex){
+    public BasicEnemy(double x, double y, Textures tex, Game game, Controller c){
         super(x,y);
         this.tex = tex;
-        velY = 1;
+        this.game = game;
+        this.c = c;
+        
+        velY = r.nextInt(3)+1;
         
         anim = new Animation(5, tex.basicEnemy[0], tex.basicEnemy[0], tex.basicEnemy[0]);
     }
@@ -39,6 +45,16 @@ public class BasicEnemy extends GameObject implements EntityB{
             y = -10;
             x = (r.nextInt((Game.WIDTH * Game.SCALE)));
         }
+        
+        for(int i = 0; i < game.ea.size(); i++){
+            EntityA tempEnt = game.ea.get(i);
+            if(Physics.Collision(this, tempEnt)){
+                c.removeEntity(this);
+                c.removeEntity(tempEnt);
+                game.setEnemy_killed(game.getEnemy_killed()+1);
+            }
+        }
+        
         anim.runAnimation();
     }
     

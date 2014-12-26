@@ -18,6 +18,7 @@ import java.util.Random;
 public class Controller {
     private LinkedList<EntityA> ea = new LinkedList<EntityA>();
     private LinkedList<EntityB> eb = new LinkedList<EntityB>();
+    private Game game;
     
     EntityA enta;
     EntityB entb;
@@ -26,15 +27,14 @@ public class Controller {
     Textures tex;
     Random r = new Random();
     
-    public Controller(Textures tex){
-//        this.game = game;
+    public Controller(Textures tex, Game game){
+        this.game = game;
         this.tex = tex;
-//        addEntity(new BasicEnemy(r.nextInt(Game.WIDTH * Game. SCALE), 0, tex));
     }
     
     public void createBasicEnemy(int enemy_count){
         for(int i = 0; i < enemy_count; i++){
-            addEntity(new BasicEnemy(r.nextInt(Game.WIDTH * Game. SCALE), -10, tex));
+            addEntity(new BasicEnemy(r.nextInt(Game.WIDTH * Game. SCALE), -10, tex, game, this));
         }
     }
     

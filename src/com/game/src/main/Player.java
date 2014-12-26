@@ -6,6 +6,7 @@
 package com.game.src.main;
 
 import com.game.src.main.classes.EntityA;
+import com.game.src.main.classes.EntityB;
 import com.game.src.main.libs.Animation;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -21,13 +22,16 @@ public class Player extends GameObject implements EntityA{
     private double velX = 0;
     private double velY = 0;
     private Textures tex;
-    private Game game;
+    Game game;
+    Controller c;
     
     Animation anim;
     
-    public Player(double x, double y, Textures tex){
+    public Player(double x, double y, Textures tex, Game game, Controller c){
         super(x,y);
         this.tex = tex;
+        this.game = game;
+        this.c = c;
         
         anim = new Animation(5, tex.player[0], tex.player[1], tex.player[2], tex.player[1]);
     }
@@ -44,6 +48,16 @@ public class Player extends GameObject implements EntityA{
             y = 0;
         if(y >= (Game.HEIGHT* Game.SCALE)-24)
             y = (Game.HEIGHT* Game.SCALE)-24;
+        
+        for(int i = 0; i < game.eb.size(); i++){
+            EntityB tempEnt = game.eb.get(i);
+            if(Physics.Collision(this, tempEnt)){
+                c.removeEntity(tempEnt);
+                Game.Health -= 10;
+                game.setEnemy_killed(game.getEnemy_killed()+1);
+            }
+            
+        }
         
         anim.runAnimation();
                

@@ -19,23 +19,23 @@ public class Bullet extends GameObject implements EntityA {
     
     private Textures tex;
     private Game game;
+    private Controller c;
     
     Animation anim;
     
-    public Bullet(double x, double y, Textures tex, Game game){
+    public Bullet(double x, double y, Textures tex, Game game, Controller c){
         super(x,y);
         this.tex = tex;
         this.game = game;
+        this.c = c;
         
         anim = new Animation(5, tex.bullet[0], tex.bullet[0],tex.bullet[0]);
     }
     
     public void tick(){
-        y -= 7;
+        y -= 5;
         
-        if(Physics.Collision(this, game.eb)){
-            System.out.println("COLLISION DETECTED");
-        }
+
         anim.runAnimation();
     }
     
